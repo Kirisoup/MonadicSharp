@@ -20,6 +20,10 @@ partial struct Option<T>
 		? bind(_value!)
 		: Option.Nil<U>();
 
+	public Option<T> BindNil(Func<Option<T>> bind) => Variation is Nil
+		? bind()
+		: this;
+
 	public Option<T> InspectVal(Action<T> inspect) {
 		if (Variation is Val) inspect(_value!);
 		return this;

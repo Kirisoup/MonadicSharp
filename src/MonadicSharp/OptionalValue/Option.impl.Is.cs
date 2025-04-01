@@ -7,8 +7,7 @@ using static Option.Variation;
 
 partial struct Option<T>
 {
-	public Option.Variation Variation => ((byte)_variation > byte.MaxValue - 2)
-		? _variation : throw new Option.InvalidVariationException();
+	public Option.Variation Variation => _variation;
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public bool IsVal() => Variation is Val;

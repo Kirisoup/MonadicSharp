@@ -7,8 +7,7 @@ using static Result.Variation;
 
 partial struct Result<T, E>
 {
-	public Result.Variation Variation => ((byte)_variation > byte.MaxValue - 2)
-		? _variation : throw new Result.InvalidVariationException();
+	public Result.Variation Variation => _variation;
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public bool IsOk() => Variation is Ok;

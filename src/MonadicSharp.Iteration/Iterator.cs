@@ -1,38 +1,18 @@
+global using System.Diagnostics.CodeAnalysis;
 global using MonadicSharp.OptionalValue;
-global using MonadicSharp.ErrorHandling;
-
-using System.Runtime.CompilerServices;
 
 namespace MonadicSharp.Iteration;
 
-public interface IIterator<T>
+// wrapper type that provides all the implementation and insures pointer safety
+public ref partial struct Iterator<Impl, T> 
+	: IDisposable
+	where Impl : struct, IIterImpl<Impl, T>
 {
-	Option<T> Next();
-}
+	private Impl _iter;
 
-public interface IExactSizeIterator<T> : IIterator<T>
-{
-	int Length { get; }
-}
-
-public interface IDoubleEndedIterator<T> : IIterator<T>
-{
-	Option<T> NextBack();
-}
-
-public interface IRestartableIterator<T> : IIterator<T>
-{
-	void Restart();
-}
-
-public static partial class Iterator
-{
-	public static IEnumerator<T> GetEnumerator<T, I>(this I self) 
-	where I: IIterator<T> {
-		while (self.Next().IsVal(out T? value)) yield return value;
+	internal Iterator(Impl content) {
+		_iter = content;
 	}
 
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static IEnumerator<T> GetEnumerator<T>(this IIterator<T> self) => 
-		self.GetEnumerator<T, IIterator<T>>();
+	public void Dispose() => _iter.Reset();
 }

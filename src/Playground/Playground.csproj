@@ -1,14 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Version>0.0.1</Version>
-		<Authors>KiriSoup</Authors>
+		<OutputType>exe</OutputType >
 
 		<TargetFramework>net48</TargetFramework>
 		<LangVersion>preview</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<NoWarn>CS8500</NoWarn>
 
 		<RootNamespace>$(MSBuildProjectName)</RootNamespace>
     	<AssemblyName>$(RootNamespace)</AssemblyName>
@@ -19,6 +18,12 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\MonadicSharp\MonadicSharp.csproj" />
+		<ProjectReference Include="..\MonadicSharp.Iteration\MonadicSharp.Iteration.csproj" />
+
+		<!-- <Reference Include="MonadicSharp.Iteration" HintPath="artifact\MonadicSharp.Iteration.dll"/> -->
+
+		<PackageReference Include="BenchmarkDotNet" Version="0.13.*" />
+		<PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.13.*" />
 
 		<PackageReference Include="PolySharp" Version="1.15.0" 
 			PrivateAssets="all" 
