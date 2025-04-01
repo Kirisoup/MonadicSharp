@@ -2,7 +2,8 @@ using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Toolchains.InProcess.Emit;
-using MonadicSharp.Iteration;
+using MonadicSharp.IterMonad;
+using ZLinq;
 
 [Config(typeof(Config))]
 [MemoryDiagnoser]
@@ -41,6 +42,16 @@ public class SomeBenchmark
 	}
 
 	[Benchmark]
+	public void ZLinq() {
+		foreach (var x in arr.AsValueEnumerable()
+			.Select(x => x * x)
+			.Where(x => x > 10))
+		{
+			__ = x;
+		}
+	}
+
+	[Benchmark]
 	public void BigIter() {
 		arr.ToIter()
 			.Map(x => x * x)
@@ -68,6 +79,32 @@ public class SomeBenchmark
 	[Benchmark]
 	public void BigLinq() {
 		foreach (var x in arr
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10))
+		{
+			__ = x;
+		}
+	}
+
+	[Benchmark]
+	public void BigZLinq() {
+		foreach (var x in arr.AsValueEnumerable()
 			.Select(x => x * x)
 			.Where(x => x > 10)
 			.Select(x => x * x)
@@ -155,6 +192,68 @@ public class SomeBenchmark
 	[Benchmark]
 	public void HugeLinq() {
 		foreach (var x in arr
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10)
+			.Select(x => x * x)
+			.Where(x => x > 10))
+		{
+			__ = x;
+		}
+	}
+
+	[Benchmark]
+	public void HugeZLinq() {
+		foreach (var x in arr.AsValueEnumerable()
 			.Select(x => x * x)
 			.Where(x => x > 10)
 			.Select(x => x * x)

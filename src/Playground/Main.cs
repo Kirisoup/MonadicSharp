@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using BenchmarkDotNet.Running;
-using MonadicSharp.Iteration;
+using MonadicSharp.IterMonad;
 
 BenchmarkRunner.Run<SomeBenchmark>();
 // var bm = new SomeBenchmark();

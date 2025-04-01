@@ -16,7 +16,6 @@ public static partial class BuiltinIterators
 
 	public struct ListIter<T> 
 		: IIterImpl<ListIter<T>, T>
-		, ISized
 		, IClone<ListIter<T>>
 	{
 		private int _index;
@@ -26,8 +25,6 @@ public static partial class BuiltinIterators
 			_index = index;
 			_list = list;
 		}
-
-		public readonly int Length => _list.Count;
 
 		bool IIterImpl<ListIter<T>, T>.Move([NotNullWhen(true)] out T? value) {
 			if (_index >= _list.Count) {
@@ -56,7 +53,6 @@ public static partial class BuiltinIterators
 
 	public struct ReadOnlyListIter<T> 
 		: IIterImpl<ReadOnlyListIter<T>, T>
-		, ISized
 		, IClone<ReadOnlyListIter<T>>
 	{
 		private int _index;
@@ -66,8 +62,6 @@ public static partial class BuiltinIterators
 			_index = index;
 			_list = list;
 		}
-
-		public readonly int Length => _list.Count;
 
 		bool IIterImpl<ReadOnlyListIter<T>, T>.Move([NotNullWhen(true)] out T? value) {
 			if (_index >= _list.Count) {

@@ -11,14 +11,11 @@ public static partial class BuiltinIterators
 
 	public struct CollectionIter<T> 
 		: IIterImpl<CollectionIter<T> , T>
-		, ISized
 	{
 		private readonly ICollection<T> _clt;
 		private IEnumerator<T>? _enu;
 
 		internal CollectionIter(ICollection<T> collection) => _clt = collection;
-
-		public readonly int Length => _clt.Count;
 
 		bool IIterImpl<CollectionIter<T>, T>.Move([NotNullWhen(true)] out T? value) {
 			_enu ??= _clt.GetEnumerator();
@@ -45,14 +42,11 @@ public static partial class BuiltinIterators
 
 	public struct ReadOnlyCollectionIter<T>
 		: IIterImpl<ReadOnlyCollectionIter<T> , T>
-		, ISized
 	{
 		private readonly IReadOnlyCollection<T> _clt;
 		private IEnumerator<T>? _enu;
 
 		internal ReadOnlyCollectionIter(IReadOnlyCollection<T> collection) => _clt = collection;
-
-		public readonly int Length => _clt.Count;
 
 		bool IIterImpl<ReadOnlyCollectionIter<T>, T>.Move([NotNullWhen(true)] out T? value) {
 			_enu ??= _clt.GetEnumerator();
