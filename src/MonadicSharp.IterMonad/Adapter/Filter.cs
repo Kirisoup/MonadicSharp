@@ -3,28 +3,26 @@ namespace MonadicSharp.IterMonad.Adapter;
 public readonly struct Filter<Inner, T> : IIterImpl<Filter<Inner, T>, T>
 	where Inner : struct, IIterImpl<Inner, T>
 {
-	internal readonly IterRef<Inner, T> _ref;
-	internal readonly Predicate<T> _f;
+	readonly Ref<Inner> _ref;
+	readonly Func<T, bool> _f;
 
-	internal Filter(ref Inner iter, Predicate<T> f) {
+	internal Filter(ref Inner iter, Func<T, bool> f) {
 		_ref = new(ref iter);
 		_f = f;
 	}
 
-	unsafe bool IIterImpl<Filter<Inner, T>, T>.Move([NotNullWhen(true)] out T? value) {
-		while (_ref.Value->Move(out value)) {
-			if (_f(value)) return true;
-		}
+	unsafe T IIterImpl<Filter<Inner, T>, T>.Item() => _ref.ptr->Item();
+
+	unsafe bool IIterImpl<Filter<Inner, T>, T>.Move() {
+		while (_ref.ptr->Move()) if (_f(_ref.ptr->Item())) return true;
 		return false;
 	}
 
-	unsafe bool IIterImpl<Filter<Inner, T>, T>.MoveBack([NotNullWhen(true)] out T? value) {
-		while (_ref.Value->MoveBack(out value)) {
-			if (_f(value)) return true;
-		}
+	unsafe bool IIterImpl<Filter<Inner, T>, T>.MoveBack() {
+		while (_ref.ptr->MoveBack()) if (_f(_ref.ptr->Item())) return true;
 		return false;
 	}
 
-	unsafe void IIterImpl<Filter<Inner, T>, T>.Reset() => _ref.Value->Reset();
-	unsafe int IIterImpl<Filter<Inner, T>, T>.Size() => _ref.Value->Size();
+	unsafe void IIterImpl<Filter<Inner, T>, T>.Reset() => _ref.ptr->Reset();
+	unsafe int IIterImpl<Filter<Inner, T>, T>.Size() => _ref.ptr->Size();
 }

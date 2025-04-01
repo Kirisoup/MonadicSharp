@@ -6,8 +6,11 @@ public interface IIterImpl<Self, T>
 	where Self: struct, IIterImpl<Self, T>
 {
 	internal void Reset();
-	internal bool Move([NotNullWhen(true)] out T? value);
-	internal bool MoveBack([NotNullWhen(true)] out T? value);
+	internal T Item();
+	internal bool Move();
+	internal bool MoveBack();
+	// internal bool Move([NotNullWhen(true)] out T? value);
+	// internal bool MoveBack([NotNullWhen(true)] out T? value);
 
 	// return negative when sizing is invalid
 	internal int Size();

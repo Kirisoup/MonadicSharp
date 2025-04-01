@@ -2,12 +2,20 @@ namespace MonadicSharp.IterMonad;
 
 public static partial class BuiltinIterators
 {
+	public static Iterator<CollectionIter<T>, T> ToIter<T>(this HashSet<T> set) => 
+		new(new(set));
+	
+	public static Iterator<CollectionIter<KeyValuePair<T, K>>, KeyValuePair<T, K>> ToIter<T, K>(
+		this Dictionary<T, K> dict) => new(new(dict));
+
+	public static Iterator<CollectionIter<T>, T> ToIter<T>(this LinkedList<T> list) => 
+		new(new(list));
+
 	public static Iterator<CollectionIter<T>, T> ToIter<T>(this ICollection<T> collection) => 
-		new(new CollectionIter<T>(collection));
+		new(new(collection));
 
 	public static Iterator<ReadOnlyCollectionIter<T>, T> ToIter<T>(
-		this IReadOnlyCollection<T> collection) =>
-		new(new ReadOnlyCollectionIter<T>(collection));
+		this IReadOnlyCollection<T> collection) => new(new(collection));
 
 	public struct CollectionIter<T> 
 		: IIterImpl<CollectionIter<T> , T>
@@ -17,20 +25,10 @@ public static partial class BuiltinIterators
 
 		internal CollectionIter(ICollection<T> collection) => _clt = collection;
 
-		bool IIterImpl<CollectionIter<T>, T>.Move([NotNullWhen(true)] out T? value) {
-			_enu ??= _clt.GetEnumerator();
-			if (!_enu.MoveNext()) {
-				value = default;
-				return false;
-			}
-			value = _enu.Current!;
-			return true;
-		}
+		T IIterImpl<CollectionIter<T>, T>.Item() => _enu!.Current;
 
-		bool IIterImpl<CollectionIter<T>, T>.MoveBack([NotNullWhen(true)] out T? value) {
-			value = default;
-			return false;
-		}
+		bool IIterImpl<CollectionIter<T>, T>.Move() => (_enu ??= _clt.GetEnumerator()).MoveNext();
+		bool IIterImpl<CollectionIter<T>, T>.MoveBack() => false;
 
 		void IIterImpl<CollectionIter<T>, T>.Reset() {
 			_enu?.Dispose();
@@ -48,20 +46,12 @@ public static partial class BuiltinIterators
 
 		internal ReadOnlyCollectionIter(IReadOnlyCollection<T> collection) => _clt = collection;
 
-		bool IIterImpl<ReadOnlyCollectionIter<T>, T>.Move([NotNullWhen(true)] out T? value) {
-			_enu ??= _clt.GetEnumerator();
-			if (!_enu.MoveNext()) {
-				value = default;
-				return false;
-			}
-			value = _enu.Current!;
-			return true;
-		}
+		T IIterImpl<ReadOnlyCollectionIter<T>, T>.Item() => _enu!.Current;
 
-		bool IIterImpl<ReadOnlyCollectionIter<T>, T>.MoveBack([NotNullWhen(true)] out T? value) {
-			value = default;
-			return false;
-		}
+		bool IIterImpl<ReadOnlyCollectionIter<T>, T>.Move() => 
+			(_enu ??= _clt.GetEnumerator()).MoveNext();
+
+		bool IIterImpl<ReadOnlyCollectionIter<T>, T>.MoveBack() => false;
 
 		void IIterImpl<ReadOnlyCollectionIter<T>, T>.Reset() {
 			_enu?.Dispose();

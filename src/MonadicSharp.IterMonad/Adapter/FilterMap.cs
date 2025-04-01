@@ -1,32 +1,29 @@
 namespace MonadicSharp.IterMonad.Adapter;
 
-public readonly struct FilterMap<Inner, T, U> : IIterImpl<FilterMap<Inner, T, U>, U>
+public struct FilterMap<Inner, T, U> : IIterImpl<FilterMap<Inner, T, U>, U>
 	where Inner : struct, IIterImpl<Inner, T>
 {
-	internal readonly IterRef<Inner, T> _ref;
-	private readonly Func<T, Option<U>> _f;
+	readonly Ref<Inner> _ref;
+	readonly Func<T, Option<U>> _f;
+	U _item = default!;
 
 	internal FilterMap(ref Inner inner, Func<T, Option<U>> f) {
 		_ref = new(ref inner);
 		_f = f;
 	}
 
-	unsafe bool IIterImpl<FilterMap<Inner, T, U>, U>.Move([NotNullWhen(true)] out U? value) {
-		while (_ref.Value->Move(out var x)) {
-			if (_f(x).IsVal(out value)) return true;
-		}
-		value = default;
+	U IIterImpl<FilterMap<Inner, T, U>, U>.Item() => _item;
+
+	unsafe bool IIterImpl<FilterMap<Inner, T, U>, U>.Move() {
+		while (_ref.ptr->Move()) if (_f(_ref.ptr->Item()).IsVal(out _item!)) return true;
 		return false;
 	}
 
-	unsafe bool IIterImpl<FilterMap<Inner, T, U>, U>.MoveBack([NotNullWhen(true)] out U? value) {
-		while (_ref.Value->MoveBack(out var x)) {
-			if (_f(x).IsVal(out value)) return true;
-		}
-		value = default;
+	unsafe bool IIterImpl<FilterMap<Inner, T, U>, U>.MoveBack() {
+		while (_ref.ptr->MoveBack()) if (_f(_ref.ptr->Item()).IsVal(out _item!)) return true;
 		return false;
 	}
 
-	unsafe void IIterImpl<FilterMap<Inner, T, U>, U>.Reset() => _ref.Value->Reset();
-	unsafe int IIterImpl<FilterMap<Inner, T, U>, U>.Size() => _ref.Value->Size();
+	unsafe void IIterImpl<FilterMap<Inner, T, U>, U>.Reset() => _ref.ptr->Reset();
+	unsafe int IIterImpl<FilterMap<Inner, T, U>, U>.Size() => _ref.ptr->Size();
 }
